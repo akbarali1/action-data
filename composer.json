@@ -1,0 +1,34 @@
+{
+  "name":"akbarali/action-data",
+  "version":"0.1",
+  "description":"Action Data Validate PHP Laravel",
+  "license":"MIT",
+  "minimum-stability": "dev",
+  "type":"library",
+  "keywords":[
+    "php",
+    "laravel"
+  ],
+  "autoload":{
+    "psr-4":{
+      "Akbarali\\ActionData\\":"src/"
+    }
+  },
+  "authors":[
+    {
+      "name":"Akbarali",
+      "email":"github@akbarali.uz",
+      "homepage":"https://github.com/akbarali1"
+    }
+  ],
+  "require":{
+    "php":">=8.0",
+    "illuminate/support":">=7",
+    "illuminate/contracts": ">=8.10.0",
+    "illuminate/http": ">=8.10.0",
+    "illuminate/validation": ">=8.10.0"
+  },
+  "require-dev":{
+    "roave/security-advisories":"dev-latest"
+  }
+}
