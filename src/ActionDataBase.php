@@ -5,6 +5,7 @@ namespace Akbarali\ActionData;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
@@ -29,7 +30,7 @@ class ActionDataBase implements ActionDataContract
      */
     public static function createFromArray(array $parameters = []): self
     {
-        $instance = app()->make(static::class);
+        $instance = App::make(static::class);
         try {
             $class  = new \ReflectionClass(static::class);
             $fields = [];
