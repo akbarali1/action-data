@@ -74,3 +74,5 @@ public function store(StoreIncomeActionData $actionData)
 //Bu yerga validatsiyadan o'tgan ma'lumot kiradi. Bo'lmasa exception qaytaradi
 }
 ```
+
+# O'zbek tilidagi Docga tushunmadizmi demak o'zbek tilini o'rganishingiz kerak :D
