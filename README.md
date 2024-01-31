@@ -1,3 +1,8 @@
+# Install
+```
+composer require akbarali/action-data
+```
+
 # Ishlatish bo'yicha yo'riqnoma
 
 Laravel Requestdan olish uchun:
