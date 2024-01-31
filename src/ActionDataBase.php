@@ -21,7 +21,9 @@ class ActionDataBase implements ActionDataContract
      * @var array
      */
     protected array $rules = [];
-    protected mixed $user;
+    protected mixed $user  = null;
+
+    protected function prepare(): void {}
 
     /**
      * @param array $parameters
@@ -56,8 +58,6 @@ class ActionDataBase implements ActionDataContract
         return $instance;
     }
 
-    protected function prepare(): void {}
-
     /**
      * @param Request $request
      * @return static
@@ -70,6 +70,17 @@ class ActionDataBase implements ActionDataContract
         $res->validate(false);
 
         return $res;
+    }
+
+    /**
+     * @param string $json
+     * @return static
+     * @throws BindingResolutionException
+     * @throws \JsonException
+     */
+    public static function createFromJson(string $json): self
+    {
+        return static::createFromArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR));
     }
 
     public function addValidationRule($name, $value): void
