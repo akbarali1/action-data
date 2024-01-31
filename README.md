@@ -22,3 +22,16 @@ $actionData->set('data', '*.user_id', $userId);
 $actionData->addValidationRule('data.*.user_id', 'required|integer');
 $actionData->validateException();
 ```
+
+Actiondata ni arrayga o`girish uchun:
+```php
+$actionData->toArray();
+// or  
+$actionData->all();
+// or
+$actionData->toSnakeArray();
+```
+Siza o`sha classdan faqat bazilari kerak bo`lsa
+```php
+$actionData->only(['id', 'name']);
+```
