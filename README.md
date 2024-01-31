@@ -50,3 +50,22 @@ Siza o'sha classdan faqat bazilari kerak bo'lsa
 ```php
 $actionData->only(['id', 'name']);
 ```
+
+Agar Laravel Controllerda Pramoy kirishini hohlayman desangiz `/config/app.php` ning `providers` siga qo`shib qo`ying
+
+```php
+'providers' => [
+...
+\Akbarali\ActionData\Providers\ActionDataServiceProvider::class,
+...
+]
+```
+
+Shunda siz Controllerni funksiyasida ActionData classini ishlatishingiz mumkin
+
+```php
+public function store(StoreIncomeActionData $actionData)
+{
+//Bu yerga validatsiyadan o'tgan ma'lumot kiradi. Bo'lmasa exception qaytaradi
+}
+```

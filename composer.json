@@ -1,6 +1,6 @@
 {
   "name":"akbarali/action-data",
-  "version":"0.2",
+  "version":"0.3.0",
   "description":"Action Data Validate PHP Laravel",
   "license":"MIT",
   "minimum-stability":"stable",
