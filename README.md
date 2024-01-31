@@ -56,7 +56,7 @@ Siza o'sha classdan faqat bazilari kerak bo'lsa
 $actionData->only(['id', 'name']);
 ```
 
-Agar Laravel Controllerda Pramoy kirishini hohlayman desangiz `/config/app.php` ning `providers` siga qo`shib qo`ying
+Agar Laravel Controllerda Pramoy kirishini hohlayman desangiz `/config/app.php` ning `providers` siga qo'shib qo'ying
 
 ```php
 'providers' => [
