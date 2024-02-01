@@ -60,9 +60,10 @@ class ActionDataBase implements ActionDataContract
 
     /**
      * @param Request $request
-     * @return static
-     * @throws ValidationException
+     * @return self
+     * @throws ActionDataException
      * @throws BindingResolutionException
+     * @throws ValidationException
      */
     public static function createFromRequest(Request $request): self
     {
@@ -83,6 +84,11 @@ class ActionDataBase implements ActionDataContract
         return static::createFromArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR));
     }
 
+    /**
+     * @param $name
+     * @param $value
+     * @return void
+     */
     public function addValidationRule($name, $value): void
     {
         $this->rules[$name] = $value;
@@ -91,6 +97,7 @@ class ActionDataBase implements ActionDataContract
     /**
      * @param bool $silent
      * @return bool
+     * @throws ActionDataException
      * @throws ValidationException
      */
     public function validate(bool $silent = true): bool
@@ -130,9 +137,18 @@ class ActionDataBase implements ActionDataContract
         return $this->validator->errors();
     }
 
-    protected function getValidationMessages(): array
+    /**
+     * @return array
+     * @throws ActionDataException
+     */
+    private function getValidationMessages(): array
     {
         $validation = trans('validation');
+
+        if (is_null($validation)) {
+            throw new ActionDataException('Validation translation not found');
+        }
+
         if (method_exists($this, 'messages') && count($this->messages()) > 0) {
             $validation = array_merge($validation, $this->messages());
         }
@@ -140,9 +156,18 @@ class ActionDataBase implements ActionDataContract
         return $validation;
     }
 
-    protected function getValidationAttributes(): array
+    /**
+     * @return array
+     * @throws ActionDataException
+     */
+    private function getValidationAttributes(): array
     {
-        return trans('form');
+        $langForm = trans('form');
+        if (is_null($langForm)) {
+            throw new ActionDataException('Form translation not found');
+        }
+
+        return $langForm;
     }
 
     /**
@@ -220,15 +245,16 @@ class ActionDataBase implements ActionDataContract
      * @param string $key
      * @param mixed  $value
      * @return $this
+     * @throws ActionDataException
      */
     public function set(string $property, string $key, mixed $value): self
     {
         if (!property_exists($this, $property)) {
-            throw new \RuntimeException("Property {$property} not exists in ".static::class);
+            throw new ActionDataException("Property {$property} not exists in ".static::class);
         }
 
         if (!is_array($this->{$property})) {
-            throw new \RuntimeException("Property {$property} not array in ".static::class);
+            throw new ActionDataException("Property {$property} not array in ".static::class);
         }
 
         data_set($this->{$property}, $key, $value);
@@ -240,15 +266,16 @@ class ActionDataBase implements ActionDataContract
      * @param string $property
      * @param string $key
      * @return $this
+     * @throws ActionDataException
      */
     public function forget(string $property, string $key): self
     {
         if (!property_exists($this, $property)) {
-            throw new \RuntimeException("Property {$property} not exists in ".static::class);
+            throw new ActionDataException("Property {$property} not exists in ".static::class);
         }
 
         if (!is_array($this->{$property})) {
-            throw new \RuntimeException("Property {$property} not array in ".static::class);
+            throw new ActionDataException("Property {$property} not array in ".static::class);
         }
 
         data_forget($this->{$property}, $key);
@@ -260,21 +287,22 @@ class ActionDataBase implements ActionDataContract
      * @param string $property
      * @param string $key
      * @return mixed
+     * @throws ActionDataException
      */
     public function get(string $property, string $key = ''): mixed
     {
         if (!property_exists($this, $property)) {
-            throw new \RuntimeException("Property {$property} not exists in ".static::class);
+            throw new ActionDataException("Property {$property} not exists in ".static::class);
         }
 
         if (!is_array($this->{$property})) {
-            throw new \RuntimeException("Property {$property} not array in ".static::class);
+            throw new ActionDataException("Property {$property} not array in ".static::class);
         }
 
         return data_get($this->{$property}, $key);
     }
 
-    private function getValidationRules(): array
+    public function getValidationRules(): array
     {
         return $this->rules;
     }
