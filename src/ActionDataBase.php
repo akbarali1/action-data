@@ -2,10 +2,8 @@
 
 namespace Akbarali\ActionData;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
@@ -34,15 +32,19 @@ abstract class ActionDataBase implements ActionDataContract
     {
         $instance = new static;
         try {
-            $class  = new \ReflectionClass(static::class);
-            $fields = [];
-            foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
-                if ($reflectionProperty->isStatic()) {
-                    continue;
+            $fields = DOCache::resolve(static::class, static function () {
+                $class  = new \ReflectionClass(static::class);
+                $fields = [];
+                foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
+                    if ($reflectionProperty->isStatic()) {
+                        continue;
+                    }
+                    $field          = $reflectionProperty->getName();
+                    $fields[$field] = $reflectionProperty;
                 }
-                $field          = $reflectionProperty->getName();
-                $fields[$field] = $reflectionProperty;
-            }
+
+                return $fields;
+            });
             foreach ($fields as $field => $validator) {
                 $value = ($parameters[$field] ?? $parameters[Str::snake($field)] ?? $validator->getDefaultValue() ?? $instance->{$field} ?? null);
                 if (is_null($value) && $validator->getType()?->allowsNull() === false) {
