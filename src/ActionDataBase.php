@@ -2,8 +2,12 @@
 
 namespace Akbarali\ActionData;
 
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\Access\Response;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
@@ -11,6 +15,8 @@ use Illuminate\Validation\ValidationException;
 
 abstract class ActionDataBase implements ActionDataContract
 {
+    protected bool $allowed   = true;
+    protected bool $authorize = false;
     /**
      * @var \Illuminate\Contracts\Validation\Validator
      */
@@ -32,19 +38,15 @@ abstract class ActionDataBase implements ActionDataContract
     {
         $instance = new static;
         try {
-            $fields = DOCache::resolve(static::class, static function () {
-                $class  = new \ReflectionClass(static::class);
-                $fields = [];
-                foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
-                    if ($reflectionProperty->isStatic()) {
-                        continue;
-                    }
-                    $field          = $reflectionProperty->getName();
-                    $fields[$field] = $reflectionProperty;
+            $class  = new \ReflectionClass(static::class);
+            $fields = [];
+            foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
+                if ($reflectionProperty->isStatic()) {
+                    continue;
                 }
-
-                return $fields;
-            });
+                $field          = $reflectionProperty->getName();
+                $fields[$field] = $reflectionProperty;
+            }
             foreach ($fields as $field => $validator) {
                 $value = ($parameters[$field] ?? $parameters[Str::snake($field)] ?? $validator->getDefaultValue() ?? $instance->{$field} ?? null);
                 if (is_null($value) && $validator->getType()?->allowsNull() === false) {
@@ -58,7 +60,7 @@ abstract class ActionDataBase implements ActionDataContract
                 throw $exception;
             }
         }
-
+        dd($instance->passesAuthorization());
         $instance->prepare();
 
         return $instance;
@@ -284,5 +286,57 @@ abstract class ActionDataBase implements ActionDataContract
     {
         return $this->rules;
     }
+
+
+    /**
+     * Determine if the request passes the authorization check.
+     *
+     * @return bool
+     *
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+     */
+    protected function passesAuthorization()
+    {
+        if (method_exists($this, 'authorize')) {
+            $result = $this->authorize();
+            dd($result);
+
+            return $result instanceof Response ? $result->authorize() : $result;
+        }
+
+        return true;
+    }
+
+    /**
+     * Determine if the response was allowed.
+     *
+     * @return bool
+     */
+    public function allowed()
+    {
+        return $this->allowed;
+    }
+
+    /**
+     * Determine if the response was denied.
+     *
+     * @return bool
+     */
+    public function denied()
+    {
+        return !$this->allowed();
+    }
+
+    public function authorize()
+    {
+        if ($this->denied()) {
+            throw (new AuthorizationException($this->message(), $this->code()))
+                ->setResponse($this)
+                ->withStatus($this->status);
+        }
+
+        return $this->authorize;
+    }
+
 
 }
