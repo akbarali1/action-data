@@ -28,7 +28,7 @@ abstract class ActionDataBase implements ActionDataContract
      * @return self
      * @throws ActionDataException
      */
-    public static function createFromArray(array $parameters = []): self
+    public static function createFromArray(array $parameters = []): static
     {
         $instance = new static;
         try {
@@ -70,7 +70,7 @@ abstract class ActionDataBase implements ActionDataContract
      * @throws ActionDataException
      * @throws ValidationException
      */
-    public static function createFromRequest(Request $request): self
+    public static function createFromRequest(Request $request): static
     {
         $res = static::createFromArray($request->all());
         $res->validate(false);
@@ -84,7 +84,7 @@ abstract class ActionDataBase implements ActionDataContract
      * @throws ActionDataException
      * @throws \JsonException
      */
-    public static function createFromJson(string $json): self
+    public static function createFromJson(string $json): static
     {
         return static::createFromArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR));
     }
