@@ -62,7 +62,6 @@ Agar Laravel Controllerda Pramoy kirishini hohlayman desangiz `/config/app.php` 
 'providers' => [
 ...
 \Akbarali\ActionData\Providers\ActionDataServiceProvider::class,
-...
 ]
 ```
 
