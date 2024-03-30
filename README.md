@@ -74,3 +74,13 @@ public function store(StoreIncomeActionData $actionData)
 //Bu yerga validatsiyadan o'tgan ma'lumot kiradi. Bo'lmasa exception qaytaradi
 }
 ```
+
+# 0.8 version add isUpdate() method
+```php
+if($actionData->isUpdate()){
+// Update
+}else{
+// Create
+}
+```
+
