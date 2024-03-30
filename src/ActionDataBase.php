@@ -285,4 +285,9 @@ abstract class ActionDataBase implements ActionDataContract
         return $this->rules;
     }
 
+    public function isUpdate(): bool
+    {
+        return isset($this->id) && $this->id > 0;
+    }
+
 }
