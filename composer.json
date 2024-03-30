@@ -14,6 +14,11 @@
       "Akbarali\\ActionData\\":"src/"
     }
   },
+  "autoload-dev":{
+    "psr-4":{
+      "Tests\\":"tests"
+    }
+  },
   "authors":[
     {
       "name":"Akbarali",
@@ -29,6 +34,7 @@
     "illuminate/validation":">=8.10.0"
   },
   "require-dev":{
-    "roave/security-advisories":"dev-latest"
+    "roave/security-advisories":"dev-latest",
+    "phpunit/phpunit":"^9.6"
   }
 }
