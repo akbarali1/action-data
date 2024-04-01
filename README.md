@@ -138,7 +138,7 @@ public function update(int $id, Request $request): RedirectResponse
    try {
         $request->request->set('id', $id);
         $this->storePotentialPartner(StorePotentialPartnersActionData::fromRequest($request)->updated());
-        return to_route('admin.potential_partner.index')->with('message', trans('all.updated'));
+        return to_route('page.index')->with('message', trans('all.updated'));
     } catch (OperationException|ActionDataException|QueryException $e) {
         return back()->withInput()->withErrors($e->getMessage());
    }
