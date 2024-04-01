@@ -11,15 +11,10 @@ use Illuminate\Validation\ValidationException;
 
 abstract class ActionDataBase implements ActionDataContract
 {
-    /**
-     * @var \Illuminate\Contracts\Validation\Validator
-     */
     private \Illuminate\Contracts\Validation\Validator $validator;
-    /**
-     * @var array
-     */
-    protected array $rules = [];
-    protected mixed $user  = null;
+    protected array                                    $rules = [];
+    protected mixed                                    $user  = null;
+    protected bool                                     $updated;
 
     protected function prepare(): void {}
 
@@ -61,6 +56,10 @@ abstract class ActionDataBase implements ActionDataContract
 
         $instance->prepare();
 
+        if (method_exists($instance, 'setUser')) {
+            $instance->setUser();
+        }
+
         return $instance;
     }
 
@@ -76,6 +75,15 @@ abstract class ActionDataBase implements ActionDataContract
         $res->validate(false);
 
         return $res;
+    }
+
+    /**
+     * @throws ValidationException
+     * @throws ActionDataException
+     */
+    public static function fromRequest(Request $request): static
+    {
+        return static::createFromRequest($request);
     }
 
     /**
@@ -113,13 +121,12 @@ abstract class ActionDataBase implements ActionDataContract
     /**
      * @param bool $silent
      * @return void
-     * @throws ActionDataException
      * @throws ValidationException
      */
     public function validateException(bool $silent = true): void
     {
         if (!$this->validate()) {
-            throw new ActionDataException($this->getValidationErrors()?->first(), ActionDataException::ERROR_INPUT_VALIDATION);
+            throw ValidationException::withMessages($this->getValidationErrors()->toArray());
         }
     }
 
@@ -287,7 +294,31 @@ abstract class ActionDataBase implements ActionDataContract
 
     public function isUpdate(): bool
     {
-        return isset($this->id) && $this->id > 0;
+        return $this->updated ?? (isset($this->id) && $this->id > 0);
+    }
+
+    public function isCreate(): bool
+    {
+        return !$this->isUpdate();
+    }
+
+    public function getUser(): mixed
+    {
+        return $this->user;
+    }
+
+    public function updated(): static
+    {
+        $this->updated = true;
+
+        return $this;
+    }
+
+    public function created(): static
+    {
+        $this->updated = false;
+
+        return $this;
     }
 
 }
