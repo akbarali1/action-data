@@ -90,7 +90,7 @@ if($actionData->isUpdate()){
 
 # 1.0.0 version
 
-Added `setUser` `isCreate` `getUser` `updated` `created` and `fromRequest` methods
+Added `setUser` `isCreate` `getUser` `updated` `created` `fromRequest` and `fromArray` methods
 
 `setUser` method is used to set
 
