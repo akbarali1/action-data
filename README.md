@@ -68,6 +68,7 @@ If you want direct access in Laravel Controller, add it to `providers` in `/conf
 
 Then you can use the ActionData class in the Controller function
 Example:
+
 ```php
 public function store(StoreIncomeActionData $actionData)
 {
@@ -75,7 +76,8 @@ public function store(StoreIncomeActionData $actionData)
 }
 ```
 
-# 0.8 version 
+# 0.8 version
+
 Add `isUpdate()` method
 
 ```php
@@ -86,7 +88,8 @@ if($actionData->isUpdate()){
 }
 ```
 
-# 1.0.0 version 
+# 1.0.0 version
+
 Added `setUser` `isCreate` `getUser` `updated` `created` and `fromRequest` methods
 
 `setUser` method is used to set
@@ -149,7 +152,8 @@ public function update(int $id, Request $request): RedirectResponse
 
 If you do not call `->updated()` after `fromRequest`, it will automatically check by id.
 If the id is in your request, then it knows that it is an update operation
-That is
+
+That's how it's written:
 
 ```php
 public function isUpdate(): bool
@@ -161,3 +165,4 @@ public function isUpdate(): bool
 `created()` is the opposite of `->updated()`
 
 `fromRequest` to reference `createFromRequest` method
+`fromArray` to reference `createFromArray` method
