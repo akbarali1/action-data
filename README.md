@@ -4,35 +4,35 @@
 composer require akbarali/action-data
 ```
 
-# Ishlatish bo'yicha yo'riqnoma
+# Instructions for use
 
-Laravel Requestdan olish uchun:
+Laravel Request Used:
 
 ```php
 StoreIncomeActionData::createFromRequest($request);
 ```
 
-Arraydan olish uchun
+Array Used:
 
 ```php
 StoreIncomeActionData::createFromArray($array);
 ```
 
-Jsondan olish
+Json Used:
 
 ```php
 StoreIncomeActionData::createFromJson($json);
 ```
 
-Agar siz yarim yo'lda validatsiya qo'shmoqchi bo'lsangiz:
+If you want to add a new validation type between functions
 
 ```php
 $actionData->addValidationRule('id', 'required|integer');
-//Qayta yuklash uchun
+//To check again
 $actionData->validateException();
 ```
 
-Aytaylik sizda data degan narsa array tipida. Siz unga o'zingiz qiymat qo'shishingiz ham mumkin. Masalan:
+Let's say you have data in array type. You can also add value to it yourself. For example:
 
 ```php
 $userId = Auth::id();
@@ -41,7 +41,7 @@ $actionData->addValidationRule('data.*.user_id', 'required|integer');
 $actionData->validateException();
 ```
 
-ActionData ni arrayga o'girish uchun:
+ActionData get Array
 
 ```php
 $actionData->toArray();
@@ -51,13 +51,13 @@ $actionData->all();
 $actionData->toSnakeArray();
 ```
 
-Siza o'sha classdan faqat bazilari kerak bo'lsa
+If you only need some of that class
 
 ```php
 $actionData->only(['id', 'name']);
 ```
 
-Agar Laravel Controllerda Pramoy kirishini hohlayman desangiz `/config/app.php` ning `providers` siga qo'shib qo'ying
+If you want direct access in Laravel Controller, add it to `providers` in `/config/app.php`
 
 ```php
 'providers' => [
@@ -66,12 +66,12 @@ Agar Laravel Controllerda Pramoy kirishini hohlayman desangiz `/config/app.php` 
 ]
 ```
 
-Shunda siz Controllerni funksiyasida ActionData classini ishlatishingiz mumkin
-
+Then you can use the ActionData class in the Controller function
+Example:
 ```php
 public function store(StoreIncomeActionData $actionData)
 {
-//Bu yerga validatsiyadan o'tgan ma'lumot kiradi. Bo'lmasa exception qaytaradi
+//This includes validated information. Otherwise, it returns an ActionDataException.
 }
 ```
 
