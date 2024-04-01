@@ -75,7 +75,8 @@ public function store(StoreIncomeActionData $actionData)
 }
 ```
 
-# 0.8 version add isUpdate() method
+# 0.8 version 
+Add `isUpdate()` method
 
 ```php
 if($actionData->isUpdate()){
@@ -85,7 +86,8 @@ if($actionData->isUpdate()){
 }
 ```
 
-# 1.0.0 version added `setUser` `isCreate` `getUser` `updated` `created` and `fromRequest` methods
+# 1.0.0 version 
+Added `setUser` `isCreate` `getUser` `updated` `created` and `fromRequest` methods
 
 `setUser` method is used to set
 
