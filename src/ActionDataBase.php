@@ -27,6 +27,7 @@ abstract class ActionDataBase implements ActionDataContract
     {
         $instance = new static;
         try {
+            /** @var array<string, \ReflectionProperty> $fields */
             $fields = DOCache::resolve(static::class, static function () {
                 $class  = new \ReflectionClass(static::class);
                 $fields = [];
@@ -40,13 +41,14 @@ abstract class ActionDataBase implements ActionDataContract
 
                 return $fields;
             });
+
             foreach ($fields as $field => $validator) {
                 $value = ($parameters[$field] ?? $parameters[Str::snake($field)] ?? $validator->getDefaultValue() ?? $instance->{$field} ?? null);
                 if (is_null($value) && $validator->getType()?->allowsNull() === false) {
                     throw new ActionDataException("Field {$field} is required", ActionDataException::ERROR_NOT_NULLABLE);
                 }
-                $instance->{$field} = $value;
-                unset($parameters[$field]);
+                $validator->setAccessible(true);
+                $validator->setValue($instance, $value);
             }
         } catch (\Throwable $exception) {
             if ($exception instanceof ActionDataException) {
@@ -169,10 +171,10 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param bool $trim_nulls
+     * @param bool $trimNulls
      * @return array
      */
-    public function toArray(bool $trim_nulls = false): array
+    public function toArray(bool $trimNulls = false): array
     {
         $data = [];
 
@@ -184,7 +186,7 @@ abstract class ActionDataBase implements ActionDataContract
                     continue;
                 }
                 $value = $reflectionProperty->getValue($this);
-                if ($trim_nulls === true) {
+                if ($trimNulls === true) {
                     if (!is_null($value)) {
                         $data[$reflectionProperty->getName()] = $value;
                     }
@@ -199,16 +201,16 @@ abstract class ActionDataBase implements ActionDataContract
         return $data;
     }
 
-    public function all(bool $trim_nulls = false): array
+    public function all(bool $trimNulls = false): array
     {
-        return $this->toArray($trim_nulls);
+        return $this->toArray($trimNulls);
     }
 
     /**
-     * @param bool $trim_nulls
+     * @param bool $trimNulls
      * @return array
      */
-    public function toSnakeArray(bool $trim_nulls = false): array
+    public function toSnakeArray(bool $trimNulls = false): array
     {
         $data = [];
         try {
@@ -219,7 +221,7 @@ abstract class ActionDataBase implements ActionDataContract
                     continue;
                 }
                 $value = $reflectionProperty->getValue($this);
-                if ($trim_nulls === true) {
+                if ($trimNulls === true) {
                     if (!is_null($value)) {
                         $data[Str::snake($reflectionProperty->getName())] = $value;
                     }

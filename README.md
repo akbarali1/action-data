@@ -166,3 +166,44 @@ public function isUpdate(): bool
 
 `fromRequest` to reference `createFromRequest` method
 `fromArray` to reference `createFromArray` method
+
+# 1.0.1 version
+readonly supported
+
+```php
+class StorePartnersActionData extends \Akbarali\ActionData\ActionDataBase
+{
+    public readonly int $id;
+
+    protected function prepare(): void
+    {
+        $this->rules = [
+            'id'          => 'nullable|numeric|exists:potential_partner,id',
+        ];
+    }
+}
+
+class PartnerController extends Controller{
+
+    public function update(int $id, Request $request): RedirectResponse
+    {
+       try {
+            $request->request->set('id', $id);
+            $this->storePartner(StorePartnersActionData::fromRequest($request)->updated());
+            return to_route('page.index')->with('message', trans('all.updated'));
+        } catch (OperationException|ActionDataException|QueryException $e) {
+            return back()->withInput()->withErrors($e->getMessage());
+       }
+    }
+    
+    public function storePartner(StorePotentialPartnersActionData $actionData): RedirectResponse
+    {
+        $actionData->id = 1; // Exception: Error
+    }
+}
+
+```
+Error: Cannot modify readonly property `App\ActionData\StorePartnersActionData::$id`
+
+
+
