@@ -333,4 +333,13 @@ abstract class ActionDataBase implements ActionDataContract
         return $this;
     }
 
+    public function has(string $property): bool
+    {
+        if (!property_exists($this, $property)) {
+            throw new \RuntimeException("Property {$property} not exists in ".static::class);
+        }
+
+        return isset($this->{$property});
+    }
+
 }
