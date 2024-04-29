@@ -19,9 +19,9 @@ abstract class ActionDataBase implements ActionDataContract
     protected function prepare(): void {}
 
     /**
-     * @param array $parameters
-     * @return self
+     * @param  array  $parameters
      * @throws ActionDataException
+     * @return self
      */
     public static function createFromArray(array $parameters = []): static
     {
@@ -29,13 +29,13 @@ abstract class ActionDataBase implements ActionDataContract
         try {
             /** @var array<string, \ReflectionProperty> $fields */
             $fields = DOCache::resolve(static::class, static function () {
-                $class  = new \ReflectionClass(static::class);
+                $class = new \ReflectionClass(static::class);
                 $fields = [];
                 foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
                     if ($reflectionProperty->isStatic()) {
                         continue;
                     }
-                    $field          = $reflectionProperty->getName();
+                    $field = $reflectionProperty->getName();
                     $fields[$field] = $reflectionProperty;
                 }
 
@@ -66,9 +66,9 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param array $parameters
-     * @return static
+     * @param  array  $parameters
      * @throws ActionDataException
+     * @return static
      */
     public static function fromArray(array $parameters = []): static
     {
@@ -76,10 +76,10 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param Request $request
-     * @return self
+     * @param  Request  $request
      * @throws ActionDataException
      * @throws ValidationException
+     * @return self
      */
     public static function createFromRequest(Request $request): static
     {
@@ -99,10 +99,10 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param string $json
-     * @return self
+     * @param  string  $json
      * @throws ActionDataException
      * @throws \JsonException
+     * @return self
      */
     public static function createFromJson(string $json): static
     {
@@ -115,9 +115,9 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param bool $silent
-     * @return bool
+     * @param  bool  $silent
      * @throws ValidationException
+     * @return bool
      */
     public function validate(bool $silent = true): bool
     {
@@ -131,9 +131,9 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param bool $silent
-     * @return void
+     * @param  bool  $silent
      * @throws ValidationException
+     * @return void
      */
     public function validateException(bool $silent = true): void
     {
@@ -165,13 +165,18 @@ abstract class ActionDataBase implements ActionDataContract
         return $validation;
     }
 
+
     protected function getValidationAttributes(): array
     {
-        return trans('form');
+        if (file_exists(resource_path('lang/'.app()->getLocale().'/validation.php'))) {
+            return trans('form');
+        }
+
+        return [];
     }
 
     /**
-     * @param bool $trimNulls
+     * @param  bool  $trimNulls
      * @return array
      */
     public function toArray(bool $trimNulls = false): array
@@ -179,7 +184,7 @@ abstract class ActionDataBase implements ActionDataContract
         $data = [];
 
         try {
-            $class      = new \ReflectionClass(static::class);
+            $class = new \ReflectionClass(static::class);
             $properties = $class->getProperties(\ReflectionProperty::IS_PUBLIC);
             foreach ($properties as $reflectionProperty) {
                 if ($reflectionProperty->isStatic()) {
@@ -207,14 +212,14 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param bool $trimNulls
+     * @param  bool  $trimNulls
      * @return array
      */
     public function toSnakeArray(bool $trimNulls = false): array
     {
         $data = [];
         try {
-            $class      = new \ReflectionClass(static::class);
+            $class = new \ReflectionClass(static::class);
             $properties = $class->getProperties(\ReflectionProperty::IS_PUBLIC);
             foreach ($properties as $reflectionProperty) {
                 if ($reflectionProperty->isStatic()) {
@@ -241,9 +246,9 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param string $property
-     * @param string $key
-     * @param mixed  $value
+     * @param  string  $property
+     * @param  string  $key
+     * @param  mixed  $value
      * @return $this
      */
     public function set(string $property, string $key, mixed $value): self
@@ -262,8 +267,8 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param string $property
-     * @param string $key
+     * @param  string  $property
+     * @param  string  $key
      * @return $this
      */
     public function forget(string $property, string $key): self
@@ -282,8 +287,8 @@ abstract class ActionDataBase implements ActionDataContract
     }
 
     /**
-     * @param string $property
-     * @param string $key
+     * @param  string  $property
+     * @param  string  $key
      * @return mixed
      */
     public function get(string $property, string $key = ''): mixed
