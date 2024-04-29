@@ -152,7 +152,11 @@ abstract class ActionDataBase implements ActionDataContract
 	public function validateException(bool $silent = true): void
 	{
 		if (!$this->validate()) {
-			throw ValidationException::withMessages($this->getValidationErrors()->toArray());
+			throw ValidationException::withMessages($this->getValidationErrors()?->toArray());
+		}
+		
+		if (count($this->toArray(true)) === 0) {
+			throw ValidationException::withMessages(['action_data_empty' => 'Action data is empty']);
 		}
 	}
 	

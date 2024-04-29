@@ -4,15 +4,15 @@ namespace Akbarali\ActionData;
 
 class DOCache
 {
-    /** @var array */
-    private static array $cache = [];
-
-    public static function resolve(string $class, \Closure $closure): array
-    {
-        if (!isset(self::$cache[$class])) {
-            self::$cache[$class] = $closure();
-        }
-
-        return self::$cache[$class];
-    }
+	/** @var array */
+	private static array $cache = [];
+	
+	public static function resolve(string $class, \Closure $closure): array
+	{
+		if (!isset(self::$cache[$class])) {
+			self::$cache[$class] = $closure();
+		}
+		
+		return self::$cache[$class];
+	}
 }
