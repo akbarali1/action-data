@@ -121,6 +121,13 @@ abstract class ActionDataBase implements ActionDataContract
 		}
 	}
 	
+	public function addValidationValue(string $method, array $fields): void
+	{
+		foreach ($fields as $field) {
+			$this->addValidationRule($field, $method);
+		}
+	}
+	
 	/**
 	 * @param  bool  $silent
 	 * @throws ValidationException
