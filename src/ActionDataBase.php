@@ -267,16 +267,17 @@ abstract class ActionDataBase implements ActionDataContract
 	 * @param  string  $property
 	 * @param  string  $key
 	 * @param  mixed   $value
+	 * @throws ActionDataException
 	 * @return $this
 	 */
 	public function set(string $property, string $key, mixed $value): self
 	{
 		if (!property_exists($this, $property)) {
-			throw new \RuntimeException("Property {$property} not exists in ".static::class);
+			throw new ActionDataException("Property {$property} not exists in ".static::class);
 		}
 		
 		if (!is_array($this->{$property})) {
-			throw new \RuntimeException("Property {$property} not array in ".static::class);
+			throw new ActionDataException("Property {$property} not array in ".static::class);
 		}
 		
 		data_set($this->{$property}, $key, $value);
@@ -287,16 +288,17 @@ abstract class ActionDataBase implements ActionDataContract
 	/**
 	 * @param  string  $property
 	 * @param  string  $key
+	 * @throws ActionDataException
 	 * @return $this
 	 */
 	public function forget(string $property, string $key): self
 	{
 		if (!property_exists($this, $property)) {
-			throw new \RuntimeException("Property {$property} not exists in ".static::class);
+			throw new ActionDataException("Property {$property} not exists in ".static::class);
 		}
 		
 		if (!is_array($this->{$property})) {
-			throw new \RuntimeException("Property {$property} not array in ".static::class);
+			throw new ActionDataException("Property {$property} not array in ".static::class);
 		}
 		
 		data_forget($this->{$property}, $key);
@@ -307,16 +309,17 @@ abstract class ActionDataBase implements ActionDataContract
 	/**
 	 * @param  string  $property
 	 * @param  string  $key
+	 * @throws ActionDataException
 	 * @return mixed
 	 */
 	public function get(string $property, string $key = ''): mixed
 	{
 		if (!property_exists($this, $property)) {
-			throw new \RuntimeException("Property {$property} not exists in ".static::class);
+			throw new ActionDataException("Property {$property} not exists in ".static::class);
 		}
 		
 		if (!is_array($this->{$property})) {
-			throw new \RuntimeException("Property {$property} not array in ".static::class);
+			throw new ActionDataException("Property {$property} not array in ".static::class);
 		}
 		
 		return data_get($this->{$property}, $key);
@@ -356,10 +359,15 @@ abstract class ActionDataBase implements ActionDataContract
 		return $this;
 	}
 	
+	/**
+	 * @param  string  $property
+	 * @throws ActionDataException
+	 * @return bool
+	 */
 	public function has(string $property): bool
 	{
 		if (!property_exists($this, $property)) {
-			throw new \RuntimeException("Property {$property} not exists in ".static::class);
+			throw new ActionDataException("Property {$property} not exists in ".static::class);
 		}
 		
 		return isset($this->{$property});
