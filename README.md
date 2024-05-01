@@ -168,6 +168,7 @@ public function isUpdate(): bool
 `fromArray` to reference `createFromArray` method
 
 # 1.0.1 version
+
 readonly supported
 
 ```php
@@ -203,7 +204,22 @@ class PartnerController extends Controller{
 }
 
 ```
+
 Error: Cannot modify readonly property `App\ActionData\StorePartnersActionData::$id`
 
+# 1.2.3 version
 
+```php
+$actionData->addValidationRule('pinfl', 'unique:users,pinfl');
+$actionData->addValidationRules([
+	'pinfl' => 'unique:users,pinfl',
+	'phone' => 'unique:users,phone',
+	'passport' => 'unique:users,passport',
+]);
+$actionData->addValidationValue('required', [
+	'pinfl', 'passport', 'phone', 'passportIssueDate',
+	'firstName', 'lastName', 'middleName', 'docType',
+	'card',
+]);
+```
 
