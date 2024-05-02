@@ -18,6 +18,8 @@ class ActionDataException extends \Exception
 		parent::__construct($message, $code, $previous);
 	}
 	
-	public const ERROR_INPUT_VALIDATION = -423;
-	public const ERROR_NOT_NULLABLE     = -623;
+	public const        ERROR_INPUT_VALIDATION          = -423;
+	public const        ERROR_NOT_NULLABLE              = -623;
+	public const        ERROR_INTERFACE_NOT_IMPLEMENTED = -823;
+	
 }

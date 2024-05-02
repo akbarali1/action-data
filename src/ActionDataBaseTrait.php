@@ -12,11 +12,8 @@ use Illuminate\Validation\ValidationException;
 trait ActionDataBaseTrait
 {
 	private \Illuminate\Contracts\Validation\Validator $validator;
-	protected array                                    $rules = [];
-	protected mixed                                    $user  = null;
-	protected bool                                     $updated;
-	
-	protected function prepare(): void {}
+	private array                                      $rules = [];
+	private bool                                       $updated;
 	
 	/**
 	 * @param  array  $parameters
@@ -29,7 +26,13 @@ trait ActionDataBaseTrait
 		try {
 			/** @var array<string, \ReflectionProperty> $fields */
 			$fields = DOCache::resolve(static::class, static function () {
-				$class  = new \ReflectionClass(static::class);
+				$class           = new \ReflectionClass(static::class);
+				$interfacesCheck = $class->implementsInterface(ActionDataTraitContract::class);
+				
+				if (!$interfacesCheck) {
+					throw new ActionDataException("Class ".static::class." must implement ".ActionDataTraitContract::class, ActionDataException::ERROR_INTERFACE_NOT_IMPLEMENTED);
+				}
+				
 				$fields = [];
 				foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $reflectionProperty) {
 					if ($reflectionProperty->isStatic()) {
@@ -56,10 +59,9 @@ trait ActionDataBaseTrait
 			}
 		}
 		
-		$instance->prepare();
-		
-		if (method_exists($instance, 'setUser')) {
-			$instance->setUser();
+		//prepare method check
+		if (method_exists($instance, 'prepare')) {
+			$instance->prepare();
 		}
 		
 		return $instance;
@@ -370,7 +372,7 @@ trait ActionDataBaseTrait
 			throw new ActionDataException("Property {$property} not exists in ".static::class);
 		}
 		
-		return isset($this->{$property});
+		return isset($this->{$proprty});
 	}
 	
 }
