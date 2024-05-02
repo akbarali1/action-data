@@ -26,10 +26,13 @@ trait ActionDataBaseTrait
 		try {
 			/** @var array<string, \ReflectionProperty> $fields */
 			$fields = DOCache::resolve(static::class, static function () {
-				$class           = new \ReflectionClass(static::class);
-				$interfacesCheck = $class->implementsInterface(ActionDataTraitContract::class);
+				$class = new \ReflectionClass(static::class);
 				
-				if (!$interfacesCheck) {
+				if (!$class->implementsInterface(ActionDataContract::class)) {
+					throw new ActionDataException("Class ".static::class." must implement ".ActionDataTraitContract::class, ActionDataException::ERROR_INTERFACE_NOT_IMPLEMENTED_TRAIT);
+				}
+				
+				if (!$class->implementsInterface(ActionDataTraitContract::class)) {
 					throw new ActionDataException("Class ".static::class." must implement ".ActionDataTraitContract::class, ActionDataException::ERROR_INTERFACE_NOT_IMPLEMENTED);
 				}
 				
