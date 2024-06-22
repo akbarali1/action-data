@@ -175,7 +175,12 @@ abstract class ActionDataBase implements ActionDataContract
 	
 	protected function getValidationMessages(): array
 	{
-		$validation = trans('validation');
+		if (file_exists(resource_path('lang/'.app()->getLocale().'/validation.php')) || file_exists(base_path('lang/'.app()->getLocale().'/validation.php'))) {
+			$validation = trans('validation');
+		} else {
+			$validation = [];
+		}
+		
 		if (method_exists($this, 'messages') && count($this->messages()) > 0) {
 			$validation = array_merge($validation, $this->messages());
 		}
