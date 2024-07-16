@@ -68,11 +68,15 @@ abstract class ActionDataBase implements ActionDataContract
 	/**
 	 * @param  array  $parameters
 	 * @throws ActionDataException
+	 * @throws ValidationException
 	 * @return static
 	 */
 	public static function fromArray(array $parameters = []): static
 	{
-		return static::createFromArray($parameters);
+		$res = static::createFromArray($parameters);
+		$res->validate(false);
+		
+		return $res;
 	}
 	
 	/**
