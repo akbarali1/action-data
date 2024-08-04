@@ -267,6 +267,17 @@ abstract class ActionDataBase implements ActionDataContract
 		return $data;
 	}
 	
+	/**
+	 * @param  bool  $trimNulls
+	 * @param  int   $options
+	 * @throws \JsonException
+	 * @return string
+	 */
+	public function toJson(bool $trimNulls = false, int $options = 0): string
+	{
+		return json_encode($this->toArray($trimNulls), $options | JSON_THROW_ON_ERROR);
+	}
+	
 	public function getOnly(array $finding = []): Collection
 	{
 		return collect($this->toArray())->only($finding);
