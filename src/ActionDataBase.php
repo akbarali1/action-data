@@ -28,6 +28,11 @@ abstract class ActionDataBase implements ActionDataContract
 	public static function createFromArray(array $parameters = []): static
 	{
 		$instance = new static;
+		
+		if (method_exists($instance, 'setUser')) {
+			$instance->setUser();
+		}
+		
 		try {
 			/** @var array<string, \ReflectionProperty> $fields */
 			$fields = DOCache::resolve(static::class, static function () {
@@ -56,10 +61,6 @@ abstract class ActionDataBase implements ActionDataContract
 			if ($exception instanceof ActionDataException) {
 				throw $exception;
 			}
-		}
-		
-		if (method_exists($instance, 'setUser')) {
-			$instance->setUser();
 		}
 		
 		$instance->prepare();
