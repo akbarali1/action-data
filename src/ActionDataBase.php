@@ -22,6 +22,8 @@ abstract class ActionDataBase implements ActionDataContract
 	 * @param  array  $parameters
 	 * @throws ActionDataException
 	 * @return self
+	 * @deprecated 2.1 Use fromArray() instead
+	 * @see        fromArray()
 	 */
 	public static function createFromArray(array $parameters = []): static
 	{
@@ -56,11 +58,11 @@ abstract class ActionDataBase implements ActionDataContract
 			}
 		}
 		
-		$instance->prepare();
-		
 		if (method_exists($instance, 'setUser')) {
 			$instance->setUser();
 		}
+		
+		$instance->prepare();
 		
 		return $instance;
 	}
