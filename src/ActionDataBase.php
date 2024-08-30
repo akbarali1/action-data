@@ -90,10 +90,7 @@ abstract class ActionDataBase implements ActionDataContract
 	 */
 	public static function createFromRequest(Request $request): static
 	{
-		$res = static::createFromArray($request->all());
-		$res->validate(false);
-		
-		return $res;
+		return static::fromArray($request->all());
 	}
 	
 	/**
@@ -109,11 +106,24 @@ abstract class ActionDataBase implements ActionDataContract
 	 * @param  string  $json
 	 * @throws ActionDataException
 	 * @throws \JsonException
+	 * @throws ValidationException
 	 * @return self
 	 */
 	public static function createFromJson(string $json): static
 	{
-		return static::createFromArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR));
+		return static::fromArray(json_decode($json, true, 512, JSON_THROW_ON_ERROR));
+	}
+	
+	/**
+	 * @param  string  $json
+	 * @throws ActionDataException
+	 * @throws ValidationException
+	 * @throws \JsonException
+	 * @return static
+	 */
+	public static function fromJson(string $json): static
+	{
+		return static::createFromJson($json);
 	}
 	
 	public function addValidationRule($name, $value): void

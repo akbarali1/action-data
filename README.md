@@ -223,3 +223,7 @@ $actionData->addValidationValue('required', [
 ]);
 ```
 
+# 1.4.0 version
+
+Added `fromJson` and bug fix `createFromArray`
+
