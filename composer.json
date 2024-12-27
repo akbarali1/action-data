@@ -1,6 +1,6 @@
 {
   "name":"akbarali/action-data",
-  "version":"1.4.0",
+  "version":"1.4.1",
   "description":"Action Data Validate PHP Laravel",
   "license":"MIT",
   "minimum-stability":"stable",
@@ -22,13 +22,13 @@
     }
   ],
   "require":{
-    "php":">=8.0",
+    "php":">=8.0"
+  },
+  "require-dev":{
+    "roave/security-advisories":"dev-latest",
     "illuminate/support":">=7",
     "illuminate/contracts":">=8.10.0",
     "illuminate/http":">=8.10.0",
     "illuminate/validation":">=8.10.0"
-  },
-  "require-dev":{
-    "roave/security-advisories":"dev-latest"
   }
 }
